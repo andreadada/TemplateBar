@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar | Template per Bar</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <!-- Config & Custom CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#F2F0E9',      /* Warm light beige */
+                            dark: '#1A1818',    /* Soft black */
+                            accent: '#FF4D00',  /* Vibrant Orange */
+                            secondary: '#A3B18A' /* Sage Green */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #F2F0E9;
+            color: #1A1818;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Utility Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            max-height: 400px;
+            margin: 0 auto;
+        }
+
+        /* Hover Interactions */
+        .hover-reveal-image {
+            transition: all 0.4s ease;
+        }
+        .hover-reveal-image:hover {
+            transform: scale(1.02) rotate(-1deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F2F0E9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1A1818;
+            border-radius: 4px;
+        }
+
+        /* Nav Link Animation */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #FF4D00;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 top-0 left-0 px-6 py-4 glass-panel transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#home" onclick="event.preventDefault(); scrollToSection('home')" class="font-display font-bold text-2xl tracking-tighter uppercase">Nome<span class="text-brand-accent">Bar</span></a>
+
+            <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
+                <a href="#home" onclick="event.preventDefault(); scrollToSection('home')" class="nav-link hover:text-brand-accent transition-colors">Home</a>
+                <a href="#menu" onclick="event.preventDefault(); scrollToSection('menu')" class="nav-link hover:text-brand-accent transition-colors">Menu</a>
+                <a href="#location" onclick="event.preventDefault(); scrollToSection('location')" class="nav-link hover:text-brand-accent transition-colors">Dove siamo</a>
+            </div>
+
+            <button onclick="scrollToSection('reservations')" class="bg-brand-dark text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-brand-accent transition-colors duration-300 uppercase tracking-wider">
+                Prenota tavolo
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="home" class="relative min-h-screen flex flex-col justify-center items-center px-4 pt-20 overflow-hidden">
+        <!-- Abstract Background Shapes -->
+        <div class="absolute top-20 right-10 w-64 h-64 bg-brand-secondary rounded-full opacity-20 blur-3xl mix-blend-multiply animate-pulse"></div>
+        <div class="absolute bottom-20 left-10 w-96 h-96 bg-brand-accent rounded-full opacity-10 blur-3xl mix-blend-multiply"></div>
+
+        <div class="z-10 text-center max-w-4xl space-y-6">
+            <p class="text-brand-accent font-bold tracking-[0.2em] uppercase text-sm animate-bounce">Slogan o frasetta a effetto</p>
+            <h1 class="font-display font-bold text-6xl md:text-9xl leading-[0.9] text-brand-dark">
+                NOME<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-dark to-brand-accent">LOCALE</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mt-6">
+                Descrizione del locale, Luogo, Menu ecc
+            </p>
+
+            <div class="flex gap-4 justify-center mt-10">
+                <button onclick="scrollToSection('menu')" class="group relative px-8 py-3 bg-brand-dark text-white rounded-full overflow-hidden">
+                    <span class="relative z-10 font-bold group-hover:text-brand-dark transition-colors duration-300">Vedi il menu</span>
+                    <div class="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION: MENU LAB (Interactive Data) -->
+    <section id="menu" class="py-24 bg-brand-dark text-brand-bg rounded-[3rem] mx-4 md:mx-10 my-10 relative">
+        <div class="max-w-7xl mx-auto px-6">
+
+            <div class="text-center mb-16">
+                <h2 class="font-display text-5xl md:text-7xl font-bold mb-6">Menu & <span class="text-brand-secondary italic">Drink</span></h2>
+                <p class="text-gray-400 max-w-xl mx-auto">
+                    Qui mettiamo tutta la lista dei drink. È interattiva: se i clienti cliccano sui nomi a sinistra, a destra si aggiorna il grafico con i sapori.
+                </p>
+
+                <!-- Category Filters -->
+                <div class="flex justify-center gap-4 mt-8 flex-wrap">
+                    <button class="filter-btn active px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-300 text-sm font-bold uppercase" data-category="signatures">I Signature</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-300 text-sm font-bold uppercase" data-category="classics">I Classici</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-300 text-sm font-bold uppercase" data-category="tapas">Food / Tapas</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Menu List (Left) -->
+                <div class="lg:col-span-7 space-y-4" id="menu-list">
+                    <!-- Items injected via JS -->
+                </div>
+
+                <!-- Flavor Profile Viz (Right) -->
+                <div class="lg:col-span-5 sticky top-24 h-fit">
+                    <div class="bg-brand-bg/10 backdrop-blur-md border border-white/10 rounded-3xl p-8">
+                        <div class="text-center mb-4">
+                            <h3 id="selected-drink-name" class="font-display text-3xl font-bold text-brand-accent">Clicca su un drink</h3>
+                            <p id="selected-drink-desc" class="text-gray-400 text-sm mt-2">Scegli dalla lista per vedere le statistiche del cocktail qui sotto.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="flavorChart"></canvas>
+                        </div>
+                        <div class="mt-6 flex justify-between text-xs text-gray-500 font-mono border-t border-white/10 pt-4">
+                            <span>VOL. ALCOLICO: <span id="vol-display" class="text-white">--</span></span>
+                            <span>ORIGINE/TIPO: <span id="origin-display" class="text-white">--</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: RESERVATIONS (Form) -->
+    <section id="reservations" class="py-24 px-6 max-w-5xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-0 bg-white rounded-3xl overflow-hidden shadow-2xl">
+            <!-- Form Visual Side -->
+            <div class="bg-brand-accent p-12 flex flex-col justify-between text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white rounded-full mix-blend-overlay opacity-20 transform translate-x-10 -translate-y-10"></div>
+
+                <div>
+                    <h3 class="font-display text-4xl font-bold mb-4">Tavoli e <br>Prenotazioni.</h3>
+                    <p class="opacity-90">Qui scrivi le vostre regole. Ad esempio: max 8 persone, dopo 15 minuti di ritardo diamo via il posto, se serve un acconto per i gruppi, ecc.</p>
+                </div>
+
+                <div class="mt-12 space-y-2 font-mono text-sm opacity-80">
+                    <p class="font-bold border-b border-white/30 pb-2 mb-2">ORARI</p>
+                    <p>Lunedì - Giovedì: orari qui</p>
+                    <p>Venerdì - Sabato: orari qui</p>
+                    <p>Domenica: chiuso / orario</p>
+                </div>
+            </div>
+
+            <!-- Form Inputs -->
+            <div class="p-12">
+                <form onsubmit="event.preventDefault(); alert('Questa è una demo! Qui colleghiamo la tua email o il sistema che usi per i tavoli.');" class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Nome e Cognome</label>
+                        <input type="text" class="w-full bg-gray-50 border-b-2 border-gray-200 p-3 focus:outline-none focus:border-brand-accent transition-colors font-bold" placeholder="Es. Mario Rossi">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Data e Ora</label>
+                            <input type="datetime-local" class="w-full bg-gray-50 border-b-2 border-gray-200 p-3 focus:outline-none focus:border-brand-accent transition-colors font-bold text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Numero Ospiti</label>
+                            <select class="w-full bg-gray-50 border-b-2 border-gray-200 p-3 focus:outline-none focus:border-brand-accent transition-colors font-bold">
+                                <option>2 Persone</option>
+                                <option>3 Persone</option>
+                                <option>4 Persone</option>
+                                <option>5+ Persone (Contattateci)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-dark text-white font-bold py-4 rounded-xl mt-4 hover:bg-brand-accent hover:shadow-lg transition-all duration-300 uppercase tracking-widest text-sm">
+                        Conferma Prenotazione
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: LOCATION (Canvas) -->
+    <section id="location" class="py-24 px-6 bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="font-display text-4xl font-bold">Come trovarci</h2>
+                <p class="text-gray-500">Qui metti la zona (es. Zona Navigli o Dietro la piazza principale)</p>
+            </div>
+
+            <!-- Canvas Map Container -->
+            <div class="relative w-full h-96 rounded-3xl overflow-hidden bg-gray-100 border border-gray-200 shadow-inner group cursor-pointer">
+                <!-- Overlay content -->
+                <div class="absolute top-6 left-6 z-10 bg-white p-4 rounded-xl shadow-lg">
+                    <h4 class="font-bold text-lg">Nome del Locale</h4>
+                    <p class="text-xs text-gray-500">Via inventata 123, Città</p>
+                </div>
+
+                <canvas id="mapCanvas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></canvas>
+
+                <div class="absolute bottom-6 right-6 z-10">
+                    <button class="bg-brand-accent text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg hover:bg-brand-dark transition-colors">
+                        Apri in Google Maps
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-dark text-white py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <h2 class="font-display text-3xl font-bold">Nome<span class="text-brand-accent">Bar</span></h2>
+                <p class="text-gray-500 text-sm mt-2">© 2026. Ricordati di mettere la tua P.IVA .</p>
+            </div>
+            <div class="flex gap-6">
+                <!-- Social Links -->
+                <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition-colors text-sm font-bold">IG</a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition-colors text-sm font-bold">FB</a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-accent transition-colors text-sm font-bold">TA</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* --- 1. DATA STORAGE --- */
+        const menuData = {
+            signatures: [
+                { id: 1, name: "Nome del drink", price: "€12", desc: "Qui ci metti gli ingredienti. Tipo: Gin, limone, zucchero, magia.", profile: [3, 4, 5, 4], vol: "20%", origin: "La Tua Creazione" },
+                { id: 2, name: "Altro drink", price: "€14", desc: "Altra descrizione del drink, breve e che faccia venire sete.", profile: [4, 4, 2, 3], vol: "18%", origin: "Signature" },
+                { id: 3, name: "Nome Drink 3", price: "€13", desc: "Ingredienti e stop. Tipo: Tequila, lime, sale.", profile: [2, 5, 3, 3], vol: "15%", origin: "Signature" },
+                { id: 4, name: "Nome Drink 4", price: "€15", desc: "Qui spieghi al volo di cosa sa questo drink.", profile: [5, 1, 4, 3], vol: "22%", origin: "Signature" }
+            ],
+            classics: [
+                { id: 5, name: "Nome del Classico", price: "€10", desc: "Ricetta classica ma fatta con la vostra roba.", profile: [4, 1, 3, 5], vol: "25%", origin: "Italia" },
+                { id: 6, name: "Altro Classico", price: "€10", desc: "Metti gli ingredienti del classico qui.", profile: [3, 4, 1, 2], vol: "12%", origin: "Cuba" }
+            ],
+            tapas: [
+                { id: 7, name: "Nome del piatto", price: "€8", desc: "Cosa c'è dentro al piatto o alla tapa da mangiare.", profile: [5, 2, 0, 0], vol: "Food", origin: "Cucina" },
+                { id: 8, name: "Altro stuzzichino", price: "€6", desc: "Descrizione di questa roba da mangiare al volo.", profile: [4, 4, 1, 0], vol: "Food", origin: "Cucina" }
+            ]
+        };
+
+        /* --- 2. INITIALIZATION --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            initFlavorChart();
+            renderMenu('signatures'); // Default category
+            drawMap();
+            setupInteractions();
+        });
+
+        /* --- 3. CHARTS --- */
+        let flavorChartInstance = null;
+
+        function initFlavorChart() {
+            const ctx = document.getElementById('flavorChart').getContext('2d');
+
+            flavorChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Dolce', 'Acido', 'Amaro', 'Alcolico (o Sapidità)'],
+                    datasets: [{
+                        label: 'Profilo Gusto',
+                        data: [0, 0, 0, 0], // Start empty
+                        backgroundColor: 'rgba(255, 77, 0, 0.2)',
+                        borderColor: '#FF4D00',
+                        pointBackgroundColor: '#FF4D00',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            pointLabels: {
+                                color: 'white',
+                                font: { family: 'Space Grotesk', size: 12, weight: 'bold' }
+                            },
+                            ticks: { display: false, max: 5 },
+                            suggestedMin: 0,
+                            suggestedMax: 5
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Auto-select first item of default category for demo
+            setTimeout(() => {
+                updateFlavorChart(menuData.signatures[0]);
+            }, 500);
+        }
+
+        function updateFlavorChart(item) {
+            if (!flavorChartInstance) return;
+
+            // Update Text
+            document.getElementById('selected-drink-name').textContent = item.name;
+            document.getElementById('selected-drink-desc').textContent = item.desc;
+            document.getElementById('vol-display').textContent = item.vol;
+            document.getElementById('origin-display').textContent = item.origin;
+
+            // Update Data
+            flavorChartInstance.data.datasets[0].data = item.profile;
+            flavorChartInstance.update();
+        }
+
+        /* --- 4. MENU LOGIC --- */
+        function renderMenu(category) {
+            const list = document.getElementById('menu-list');
+            list.innerHTML = ''; // Clear current
+
+            menuData[category].forEach((item, index) => {
+                const el = document.createElement('div');
+                el.className = `group flex justify-between items-center p-6 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all duration-300 transform hover:scale-[1.01] hover:border-brand-accent/50 ${index === 0 ? 'border-brand-accent/50 bg-white/10' : ''}`;
+                el.innerHTML = `
+                    <div class="pr-4">
+                        <h4 class="font-display font-bold text-xl text-white group-hover:text-brand-accent transition-colors">${item.name}</h4>
+                        <p class="text-xs text-gray-400 mt-1 line-clamp-1 md:line-clamp-none">${item.desc}</p>
+                    </div>
+                    <div class="font-mono font-bold text-brand-secondary text-lg flex-shrink-0">${item.price}</div>
+                `;
+
+                // Add Click Event
+                el.onclick = () => {
+                    // Remove active style from all
+                    Array.from(list.children).forEach(c => {
+                        c.classList.remove('border-brand-accent/50', 'bg-white/10');
+                    });
+                    // Add active style to clicked
+                    el.classList.add('border-brand-accent/50', 'bg-white/10');
+                    updateFlavorChart(item);
+                };
+
+                list.appendChild(el);
+            });
+        }
+
+        function setupInteractions() {
+            // Category Buttons
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Update Button UI
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-white', 'text-black');
+                        b.classList.add('text-white');
+                    });
+                    e.target.classList.add('bg-white', 'text-black');
+                    e.target.classList.remove('text-white');
+
+                    // Render Category
+                    const cat = e.target.getAttribute('data-category');
+                    renderMenu(cat);
+
+                    // Update chart to first of new category
+                    updateFlavorChart(menuData[cat][0]);
+                });
+            });
+        }
+
+        /* --- 5. CANVAS MAP --- */
+        function drawMap() {
+            const canvas = document.getElementById('mapCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set resolution
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+
+            // Styles
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Background
+            ctx.fillStyle = '#E5E7EB';
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw Streets (Abstract Grid)
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 15;
+            ctx.lineCap = 'round';
+
+            // Street 1
+            ctx.beginPath();
+            ctx.moveTo(w * 0.2, 0);
+            ctx.lineTo(w * 0.4, h);
+            ctx.stroke();
+
+            // Street 2
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.6);
+            ctx.lineTo(w, h * 0.4);
+            ctx.stroke();
+
+            // Street 3
+            ctx.beginPath();
+            ctx.moveTo(w * 0.8, 0);
+            ctx.lineTo(w * 0.7, h);
+            ctx.stroke();
+
+            // Draw Location Marker
+            const markerX = w * 0.45;
+            const markerY = h * 0.48;
+
+            // Shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.beginPath();
+            ctx.ellipse(markerX, markerY + 20, 15, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pin Body
+            ctx.fillStyle = '#FF4D00';
+            ctx.beginPath();
+            ctx.arc(markerX, markerY, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pin Point
+            ctx.beginPath();
+            ctx.moveTo(markerX - 14, markerY + 4);
+            ctx.lineTo(markerX, markerY + 30);
+            ctx.lineTo(markerX + 14, markerY + 4);
+            ctx.fillStyle = '#FF4D00';
+            ctx.fill();
+
+            // Inner Dot
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(markerX, markerY, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Navigation Scroll Helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Handle Resize for Canvas
+        window.addEventListener('resize', () => {
+            drawMap();
+        });
+
+    </script>
+</body>
+</html>
