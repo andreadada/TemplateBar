@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALMA Vibe | Template per Bar e Mixology</title>
-    
+    <title>Template per Bar</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -106,7 +106,7 @@
     <nav class="fixed w-full z-50 top-0 left-0 px-6 py-4 glass-panel transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <a href="#home" onclick="event.preventDefault(); scrollToSection('home')" class="font-display font-bold text-2xl tracking-tighter uppercase">Nome<span class="text-brand-accent">Bar</span></a>
-            
+
             <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
                 <a href="#home" onclick="event.preventDefault(); scrollToSection('home')" class="nav-link hover:text-brand-accent transition-colors">Home</a>
                 <a href="#menu" onclick="event.preventDefault(); scrollToSection('menu')" class="nav-link hover:text-brand-accent transition-colors">Menu</a>
@@ -133,7 +133,7 @@
             <p class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mt-6">
                 Descrizione del locale, Luogo, Menu ecc
             </p>
-            
+
             <div class="flex gap-4 justify-center mt-10">
                 <button onclick="scrollToSection('menu')" class="group relative px-8 py-3 bg-brand-dark text-white rounded-full overflow-hidden">
                     <span class="relative z-10 font-bold group-hover:text-brand-dark transition-colors duration-300">Vedi il menu</span>
@@ -146,13 +146,13 @@
     <!-- SECTION: MENU LAB (Interactive Data) -->
     <section id="menu" class="py-24 bg-brand-dark text-brand-bg rounded-[3rem] mx-4 md:mx-10 my-10 relative">
         <div class="max-w-7xl mx-auto px-6">
-            
+
             <div class="text-center mb-16">
                 <h2 class="font-display text-5xl md:text-7xl font-bold mb-6">Menu & <span class="text-brand-secondary italic">Drink</span></h2>
                 <p class="text-gray-400 max-w-xl mx-auto">
                     Qui mettiamo tutta la lista dei drink. È interattiva: se i clienti cliccano sui nomi a sinistra, a destra si aggiorna il grafico con i sapori.
                 </p>
-                
+
                 <!-- Category Filters -->
                 <div class="flex justify-center gap-4 mt-8 flex-wrap">
                     <button class="filter-btn active px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all duration-300 text-sm font-bold uppercase" data-category="signatures">I Signature</button>
@@ -193,12 +193,12 @@
             <!-- Form Visual Side -->
             <div class="bg-brand-accent p-12 flex flex-col justify-between text-white relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white rounded-full mix-blend-overlay opacity-20 transform translate-x-10 -translate-y-10"></div>
-                
+
                 <div>
                     <h3 class="font-display text-4xl font-bold mb-4">Tavoli e <br>Prenotazioni.</h3>
                     <p class="opacity-90">Qui scriviamo le vostre regole. Ad esempio: max 8 persone, dopo 15 minuti di ritardo diamo via il posto, se serve un acconto per i gruppi, ecc.</p>
                 </div>
-                
+
                 <div class="mt-12 space-y-2 font-mono text-sm opacity-80">
                     <p class="font-bold border-b border-white/30 pb-2 mb-2">ORARI</p>
                     <p>Lunedì - Giovedì: orari qui</p>
@@ -244,7 +244,7 @@
                 <h2 class="font-display text-4xl font-bold">Come trovarci</h2>
                 <p class="text-gray-500">Qui metti la zona (es. Zona Navigli o Dietro la piazza principale)</p>
             </div>
-            
+
             <!-- Canvas Map Container -->
             <div class="relative w-full h-96 rounded-3xl overflow-hidden bg-gray-100 border border-gray-200 shadow-inner group cursor-pointer">
                 <!-- Overlay content -->
@@ -252,9 +252,9 @@
                     <h4 class="font-bold text-lg">Nome del Locale</h4>
                     <p class="text-xs text-gray-500">Via inventata 123, Città</p>
                 </div>
-                
+
                 <canvas id="mapCanvas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></canvas>
-                
+
                 <div class="absolute bottom-6 right-6 z-10">
                     <button class="bg-brand-accent text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg hover:bg-brand-dark transition-colors">
                         Apri in Google Maps
@@ -313,7 +313,7 @@
 
         function initFlavorChart() {
             const ctx = document.getElementById('flavorChart').getContext('2d');
-            
+
             flavorChartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
@@ -346,7 +346,7 @@
                     plugins: { legend: { display: false } }
                 }
             });
-            
+
             // Auto-select first item of default category for demo
             setTimeout(() => {
                 updateFlavorChart(menuData.signatures[0]);
@@ -355,7 +355,7 @@
 
         function updateFlavorChart(item) {
             if (!flavorChartInstance) return;
-            
+
             // Update Text
             document.getElementById('selected-drink-name').textContent = item.name;
             document.getElementById('selected-drink-desc').textContent = item.desc;
@@ -371,7 +371,7 @@
         function renderMenu(category) {
             const list = document.getElementById('menu-list');
             list.innerHTML = ''; // Clear current
-            
+
             menuData[category].forEach((item, index) => {
                 const el = document.createElement('div');
                 el.className = `group flex justify-between items-center p-6 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all duration-300 transform hover:scale-[1.01] hover:border-brand-accent/50 ${index === 0 ? 'border-brand-accent/50 bg-white/10' : ''}`;
@@ -382,7 +382,7 @@
                     </div>
                     <div class="font-mono font-bold text-brand-secondary text-lg flex-shrink-0">${item.price}</div>
                 `;
-                
+
                 // Add Click Event
                 el.onclick = () => {
                     // Remove active style from all
@@ -410,11 +410,11 @@
                     });
                     e.target.classList.add('bg-white', 'text-black');
                     e.target.classList.remove('text-white');
-                    
+
                     // Render Category
                     const cat = e.target.getAttribute('data-category');
                     renderMenu(cat);
-                    
+
                     // Update chart to first of new category
                     updateFlavorChart(menuData[cat][0]);
                 });
@@ -425,7 +425,7 @@
         function drawMap() {
             const canvas = document.getElementById('mapCanvas');
             const ctx = canvas.getContext('2d');
-            
+
             // Set resolution
             canvas.width = canvas.parentElement.offsetWidth;
             canvas.height = canvas.parentElement.offsetHeight;
